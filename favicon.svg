@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Zipica icon">
+  <defs>
+    <linearGradient id="zipica-shell" x1="36" y1="24" x2="220" y2="232" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#16171A" />
+      <stop offset="1" stop-color="#050506" />
+    </linearGradient>
+    <linearGradient id="zipica-accent" x1="80" y1="72" x2="166" y2="158" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" />
+      <stop offset="0.45" stop-color="#DCEBFF" />
+      <stop offset="1" stop-color="#7DD3FC" />
+    </linearGradient>
+  </defs>
+
+  <rect x="16" y="16" width="224" height="224" rx="56" fill="url(#zipica-shell)" />
+  <path d="M54 58c0-13.255 10.745-24 24-24h100c13.255 0 24 10.745 24 24v10c0 2.209-1.791 4-4 4h-12c-8.837 0-16 7.163-16 16v10c0 2.209-1.791 4-4 4H90c-8.837 0-16 7.163-16 16v10c0 2.209-1.791 4-4 4H58c-2.209 0-4-1.791-4-4V58Z" fill="#FFFFFF" fill-opacity="0.06" />
+  <rect x="52" y="52" width="152" height="152" rx="38" fill="none" stroke="#FFFFFF" stroke-opacity="0.92" stroke-width="10" />
+  <path d="M84 92h82" stroke="url(#zipica-accent)" stroke-width="14" stroke-linecap="round" />
+  <path d="M166 92l-54 54" stroke="url(#zipica-accent)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M112 146h60" stroke="url(#zipica-accent)" stroke-width="14" stroke-linecap="round" />
+  <circle cx="172" cy="84" r="8" fill="#FFFFFF" fill-opacity="0.98" />
+</svg>
