@@ -16,16 +16,16 @@
         extend: {
           colors: {
             brand: {
-              50:  '#fdf4ff',
-              100: '#fae8ff',
-              200: '#f5d0fe',
-              300: '#f0abfc',
-              400: '#e879f9',
-              500: '#d946ef',
-              600: '#c026d3',
-              700: '#a21caf',
-              800: '#86198f',
-              900: '#701a75',
+              50:  '#f0f7ff',
+              100: '#e0effe',
+              200: '#bae0fd',
+              300: '#7cc8fb',
+              400: '#38aef7',
+              500: '#007AFF',
+              600: '#0061cc',
+              700: '#004d9e',
+              800: '#003e7a',
+              900: '#063463',
             },
           },
           fontFamily: {
@@ -49,7 +49,7 @@
       100% { background-position: 0% 50%; }
     }
     .animated-gradient {
-      background: linear-gradient(-45deg, #7c3aed, #c026d3, #ec4899, #a21caf);
+      background: linear-gradient(-45deg, #007AFF, #5856D6, #00C7BE, #004d9e);
       background-size: 400% 400%;
       animation: gradientShift 8s ease infinite;
     }
@@ -104,7 +104,7 @@
 
       <!-- Logo -->
       <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-xl animated-gradient flex items-center justify-center text-white font-bold text-sm shadow-lg">C</div>
+        <div class="w-8 h-8 rounded-xl animated-gradient flex items-center justify-center text-white font-bold text-sm shadow-lg">Z</div>
         <span class="font-bold text-lg tracking-tight">Zipica</span>
       </div>
 
@@ -143,7 +143,7 @@
     <!-- Background blobs -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
       <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-brand-300/30 dark:bg-brand-700/20 blur-3xl"></div>
-      <div class="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-pink-300/30 dark:bg-pink-900/20 blur-3xl"></div>
+      <div class="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-brand-300/30 dark:bg-brand-900/20 blur-3xl"></div>
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-purple-200/20 dark:bg-purple-900/10 blur-3xl"></div>
     </div>
 
@@ -158,7 +158,7 @@
 
         <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-6">
           Your photos,<br/>
-          <span class="bg-gradient-to-r from-brand-500 to-pink-500 bg-clip-text text-transparent">blazingly</span><br/>
+          <span class="bg-gradient-to-r from-brand-500 to-indigo-500 bg-clip-text text-transparent">blazingly</span><br/>
           organised.
         </h1>
 
@@ -188,83 +188,10 @@
 
       <!-- Right: phone mockup -->
       <div class="flex-1 flex justify-center lg:justify-end">
-        <div class="float relative w-64 sm:w-72">
-          <!-- Phone shell -->
-          <div class="relative rounded-[2.5rem] bg-gray-900 dark:bg-gray-800 shadow-2xl ring-1 ring-gray-700 p-3">
-            <!-- Screen -->
-            <div class="rounded-[2rem] overflow-hidden bg-gray-950 aspect-[9/19]">
-              <!-- Status bar -->
-              <div class="h-7 bg-gray-900 flex items-center justify-between px-5">
-                <span class="text-white text-[10px] font-semibold">9:41</span>
-                <div class="absolute top-5 left-1/2 -translate-x-1/2 w-24 h-5 bg-gray-900 rounded-full ring-1 ring-gray-700"></div>
-                <div class="flex gap-1 items-center">
-                  <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.237 4.237 0 00-6 0zm-4-4l2 2a7.074 7.074 0 0110 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
-                  <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="11" rx="2"/><rect x="21" y="10" width="2" height="5" rx="1"/></svg>
-                </div>
-              </div>
-
-              <!-- App UI preview -->
-              <div class="bg-gray-950 p-2">
-                <!-- App header -->
-                <div class="flex items-center justify-between mb-3 px-1">
-                  <div class="text-white text-sm font-bold">Gallery</div>
-                  <div class="flex gap-1.5">
-                    <div class="w-6 h-6 rounded-full bg-gray-800"></div>
-                    <div class="w-6 h-6 rounded-full bg-gray-800"></div>
-                  </div>
-                </div>
-
-                <!-- Photo grid mock -->
-                <div class="grid grid-cols-3 gap-0.5">
-                  <!-- Row 1 -->
-                  <div class="shimmer aspect-square rounded-sm"></div>
-                  <div class="shimmer aspect-square rounded-sm" style="animation-delay:.1s"></div>
-                  <div class="aspect-square rounded-sm bg-gradient-to-br from-violet-400 to-pink-500"></div>
-                  <!-- Row 2 -->
-                  <div class="aspect-square rounded-sm bg-gradient-to-br from-sky-400 to-blue-600"></div>
-                  <div class="shimmer aspect-square rounded-sm" style="animation-delay:.2s"></div>
-                  <div class="shimmer aspect-square rounded-sm" style="animation-delay:.3s"></div>
-                  <!-- Row 3 -->
-                  <div class="shimmer aspect-square rounded-sm" style="animation-delay:.15s"></div>
-                  <div class="aspect-square rounded-sm bg-gradient-to-br from-emerald-400 to-teal-600"></div>
-                  <div class="shimmer aspect-square rounded-sm" style="animation-delay:.25s"></div>
-                  <!-- Row 4 -->
-                  <div class="aspect-square rounded-sm bg-gradient-to-br from-amber-400 to-orange-500"></div>
-                  <div class="shimmer aspect-square rounded-sm" style="animation-delay:.05s"></div>
-                  <div class="aspect-square rounded-sm bg-gradient-to-br from-rose-400 to-pink-600"></div>
-                  <!-- Row 5 -->
-                  <div class="shimmer aspect-square rounded-sm" style="animation-delay:.35s"></div>
-                  <div class="shimmer aspect-square rounded-sm" style="animation-delay:.4s"></div>
-                  <div class="aspect-square rounded-sm bg-gradient-to-br from-indigo-400 to-purple-600"></div>
-                </div>
-
-                <!-- Bottom nav mock -->
-                <div class="mt-3 bg-gray-900 rounded-xl flex justify-around py-2 px-1">
-                  <div class="flex flex-col items-center gap-0.5">
-                    <svg class="w-4 h-4 text-brand-400" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                    <div class="w-1 h-1 rounded-full bg-brand-400"></div>
-                  </div>
-                  <div class="flex flex-col items-center gap-0.5 opacity-40">
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke-width="2"/></svg>
-                    <div class="w-1 h-1 rounded-full bg-transparent"></div>
-                  </div>
-                  <div class="flex flex-col items-center gap-0.5 opacity-40">
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" stroke-width="2"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-width="2"/><path d="M10 11v6M14 11v6" stroke-width="2"/></svg>
-                    <div class="w-1 h-1 rounded-full bg-transparent"></div>
-                  </div>
-                  <div class="flex flex-col items-center gap-0.5 opacity-40">
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke-width="2"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2"/></svg>
-                    <div class="w-1 h-1 rounded-full bg-transparent"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Home indicator -->
-            <div class="mt-2 mx-auto w-16 h-1 bg-gray-600 rounded-full"></div>
-          </div>
-
+        <div class="float relative w-full max-w-lg">
+          <img src="public/screenshots/hero_mockup.png" alt="Zipica Pro Premium Mockup" class="w-full h-auto rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)]">
           <!-- Glow behind phone -->
-          <div class="absolute inset-0 -z-10 blur-3xl bg-brand-400/30 dark:bg-brand-600/20 rounded-full scale-110"></div>
+          <div class="absolute inset-0 -z-10 blur-[80px] bg-brand-500/30 dark:bg-brand-600/20 rounded-full scale-90"></div>
         </div>
       </div>
     </div>
@@ -296,7 +223,7 @@
 
         <!-- 2: Video Compression -->
         <div class="reveal glass rounded-2xl p-6 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200">
-          <div class="w-11 h-11 rounded-xl bg-pink-100 dark:bg-pink-900/60 flex items-center justify-center mb-4 text-pink-600 dark:text-pink-300">
+          <div class="w-11 h-11 rounded-xl bg-sky-100 dark:bg-sky-900/60 flex items-center justify-center mb-4 text-sky-600 dark:text-sky-300">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
           <h3 class="font-bold text-lg mb-2">Video Compression</h3>
@@ -355,53 +282,70 @@
         <p class="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">Responsive 3–5 column grid adapts to your screen. Calendar view, collections, and albums always one tap away.</p>
       </div>
 
-      <!-- Mock gallery grid -->
-      <div class="reveal rounded-3xl overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800 bg-gray-950">
-        <!-- Mock top bar -->
-        <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
-          <div class="flex gap-1.5">
-            <div class="w-3 h-3 rounded-full bg-red-500"></div>
-            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+      <!-- Real gallery preview -->
+      <div class="reveal relative max-w-5xl mx-auto">
+        <div class="rounded-3xl overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800">
+          <img src="public/screenshots/gallery_mockup.png" alt="Zipica Gallery View Premium" class="w-full h-auto">
+        </div>
+        <!-- Decorative glow -->
+        <div class="absolute -inset-10 -z-10 blur-3xl bg-brand-500/10 rounded-[3rem]"></div>
+      </div>
+    </div>
+  </section>
+  <section>
+     <!-- Feature: Cleanup -->
+      <div class="mt-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 p-6 flex flex-col lg:flex-row items-center gap-16 reveal">
+        <div class="flex-1">
+          <div class="w-12 h-12 rounded-2xl bg-brand-100 dark:bg-brand-900/40 flex items-center justify-center mb-6 text-brand-600 dark:text-brand-300 shadow-lg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
           </div>
-          <div class="text-gray-400 text-xs font-medium">Zipica · Gallery</div>
-          <div class="flex gap-3 text-gray-500 text-xs">
-            <span>3,847 photos</span>
+          <h3 class="text-3xl font-black mb-4">Reclaim gigabytes in seconds.</h3>
+          <p class="text-gray-500 dark:text-gray-400 text-lg leading-relaxed mb-6">
+            Our smart duplicate detection identifies near-identical photos, blurry shots, and massive videos that are eating your storage. Save up to 80% space without losing a single memory.
+          </p>
+          <ul class="space-y-3">
+            <li class="flex items-center gap-3 text-sm font-medium">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">✓</span>
+              <span>Identifies similar photo bursts</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm font-medium">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">✓</span>
+              <span>Bulk delete with one tap</span>
+            </li>
+          </ul>
+        </div>
+        <div class="flex-1">
+          <div class="relative group">
+            <div class="absolute -inset-4 bg-gradient-to-r from-brand-500 to-indigo-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
+            <div class="relative rounded-[2rem] overflow-hidden border border-gray-100 dark:border-gray-800 shadow-2xl">
+              <img src="public/screenshots/duplicates_mockup.png" alt="Duplicate Detection Premium Mockup" class="w-full h-auto">
+            </div>
           </div>
         </div>
+      </div>
 
-        <!-- Photo grid -->
-        <div class="grid grid-cols-5 gap-0.5 p-0.5 bg-gray-950">
-          <!-- 25 colour blocks simulating photos -->
-          <div class="aspect-square bg-gradient-to-br from-violet-400 to-purple-600"></div>
-          <div class="aspect-square bg-gradient-to-br from-sky-300 to-blue-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-rose-300 to-pink-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-amber-300 to-orange-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-emerald-300 to-teal-500"></div>
-
-          <div class="aspect-square bg-gradient-to-br from-fuchsia-400 to-pink-600"></div>
-          <div class="aspect-square bg-gradient-to-br from-cyan-300 to-sky-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-lime-300 to-green-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-red-400 to-rose-600"></div>
-          <div class="aspect-square bg-gradient-to-br from-indigo-400 to-violet-600"></div>
-
-          <div class="aspect-square bg-gradient-to-br from-yellow-300 to-amber-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-teal-400 to-cyan-600"></div>
-          <div class="aspect-square bg-gradient-to-br from-purple-400 to-indigo-600"></div>
-          <div class="aspect-square bg-gradient-to-br from-orange-400 to-red-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-green-400 to-emerald-600"></div>
-
-          <div class="aspect-square bg-gradient-to-br from-blue-400 to-indigo-600"></div>
-          <div class="aspect-square bg-gradient-to-br from-pink-400 to-fuchsia-600"></div>
-          <div class="aspect-square bg-gradient-to-br from-amber-400 to-yellow-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-slate-400 to-gray-600"></div>
-          <div class="aspect-square bg-gradient-to-br from-teal-300 to-green-500"></div>
-
-          <div class="aspect-square bg-gradient-to-br from-rose-400 to-red-600"></div>
-          <div class="aspect-square bg-gradient-to-br from-sky-400 to-cyan-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-violet-300 to-purple-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-lime-400 to-teal-500"></div>
-          <div class="aspect-square bg-gradient-to-br from-fuchsia-300 to-pink-400"></div>
+      <!-- Feature: Vault -->
+      <div class="mt-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row-reverse items-center gap-16 reveal">
+        <div class="flex-1 text-right lg:text-left">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center mb-6 text-amber-600 dark:text-amber-300 shadow-lg ml-auto lg:ml-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <h3 class="text-3xl font-black mb-4">Your privacy, strictly enforced.</h3>
+          <p class="text-gray-500 dark:text-gray-400 text-lg leading-relaxed mb-6">
+            Military-grade AES-256 encryption protects your most sensitive folders. The keys never leave your device, ensuring total privacy.
+          </p>
+          <div class="flex gap-4 justify-end lg:justify-start">
+            <div class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-xs font-bold uppercase tracking-wider">AES-256-GCM</div>
+            <div class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-xs font-bold uppercase tracking-wider">PBKDF2</div>
+          </div>
+        </div>
+        <div class="flex-1">
+          <div class="relative group">
+            <div class="absolute -inset-4 bg-gradient-to-r from-amber-500 to-orange-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
+            <div class="relative rounded-[2rem] overflow-hidden border border-gray-100 dark:border-gray-800 shadow-2xl">
+              <img src="public/screenshots/vault_mockup.png" alt="Secure Vault Premium Mockup" class="w-full h-auto">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -451,7 +395,7 @@
         <div class="reveal glass rounded-3xl p-8 bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-800 flex flex-col h-full hover:shadow-xl transition-all duration-300">
           <div class="mb-8">
             <h3 class="text-xl font-bold mb-2">Lite</h3>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Blazingly small, under 5MB install size.</p>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Blazingly small, under 3MB install size.</p>
           </div>
           <div class="mb-8">
             <span class="text-4xl font-black">$0</span>
@@ -490,7 +434,7 @@
             <p class="text-gray-500 dark:text-gray-400 text-sm">The ultimate toolkit for your library.</p>
           </div>
           <div class="mb-8">
-            <span class="text-4xl font-black">$4.99</span>
+            <span class="text-4xl font-black">$3.99</span>
             <span class="text-gray-400 text-sm ml-1">One-time purchase</span>
           </div>
           <ul class="space-y-4 mb-10 text-sm flex-grow">
@@ -500,15 +444,15 @@
             </li>
             <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
               <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Compress: All formats (PNG, WebP)</span>
+              <span>Compress Image: All formats (JPEG, PNG, WebP, AVIF)</span>
             </li>
             <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
               <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               <span>Video Compression</span>
             </li>
-            <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
+             <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
               <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Merge: Unlimited images</span>
+              <span>Vault, Merge, Archived zip without limit</span>
             </li>
           </ul>
           <a href="#download" class="block text-center py-4 px-6 rounded-2xl animated-gradient text-white font-bold shadow-xl shadow-brand-500/20 hover:scale-[1.02] transition-all">Go Pro Now</a>
