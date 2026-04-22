@@ -4,633 +4,1260 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <title>Zipica – Blazing Fast Photo Gallery</title>
+  <title>Zipica – Photo Gallery & Cleanup</title>
   <meta name="description" content="Zipica is a performant cross-platform photo gallery app with virtual scrolling, smart caching, batch operations, and hardware-accelerated video compression." />
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50:  '#f0f7ff',
-              100: '#e0effe',
-              200: '#bae0fd',
-              300: '#7cc8fb',
-              400: '#38aef7',
-              500: '#007AFF',
-              600: '#0061cc',
-              700: '#004d9e',
-              800: '#003e7a',
-              900: '#063463',
-            },
-          },
-          fontFamily: {
-            sans: ['"Inter"', 'ui-sans-serif', 'system-ui'],
-          },
-        },
-      },
-    }
-  </script>
-
-  <!-- Inter font -->
+  <!-- Nunito Sans font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,400&display=swap" rel="stylesheet" />
 
   <style>
-    /* Gradient animation for hero */
-    @keyframes gradientShift {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .animated-gradient {
-      background: linear-gradient(-45deg, #007AFF, #5856D6, #00C7BE, #004d9e);
-      background-size: 400% 400%;
-      animation: gradientShift 8s ease infinite;
-    }
-
-    /* Floating animation for phone mockup */
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-12px); }
-    }
-    .float { animation: float 4s ease-in-out infinite; }
-
-    /* Fade-in on scroll */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* Glassmorphism card */
-    .glass {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    .dark .glass {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    /* ─── Design Tokens ─── */
+    :root {
+      /* Light mode — blue-tinted neutrals */
+      --bg:           oklch(98% 0.005 250);
+      --surface:      oklch(96% 0.008 250);
+      --surface-alt:  oklch(94% 0.010 250);
+      --border:       oklch(88% 0.010 250);
+      --text-primary: oklch(15% 0.020 250);
+      --text-secondary: oklch(45% 0.015 250);
+      --brand:        oklch(52% 0.170 250);
+      --brand-hover:  oklch(46% 0.170 250);
+      --brand-muted:  oklch(94% 0.015 250);
+      --success:      oklch(58% 0.140 145);
+      --caution:      oklch(72% 0.130 80);
+      --nav-bg:       oklch(98% 0.004 250 / 0.92);
+      --shadow-sm:    0 1px 3px oklch(0% 0 0 / 0.06), 0 1px 2px oklch(0% 0 0 / 0.04);
+      --shadow-md:    0 4px 12px oklch(0% 0 0 / 0.08), 0 2px 4px oklch(0% 0 0 / 0.04);
+      --shadow-lg:    0 16px 40px oklch(0% 0 0 / 0.10), 0 4px 12px oklch(0% 0 0 / 0.06);
+      --radius-card:  1.25rem;
+      --radius-btn:   999px;
+      --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+      --transition:   150ms var(--ease-out);
     }
 
-    /* Grid photo placeholder shimmer */
-    @keyframes shimmer {
-      0%   { background-position: -400px 0; }
-      100% { background-position: 400px 0; }
-    }
-    .shimmer {
-      background: linear-gradient(90deg, #e2d5f8 25%, #f3e8ff 50%, #e2d5f8 75%);
-      background-size: 800px 100%;
-      animation: shimmer 1.8s infinite linear;
-    }
-    .dark .shimmer {
-      background: linear-gradient(90deg, #2e1065 25%, #4a1d96 50%, #2e1065 75%);
-      background-size: 800px 100%;
+    .dark {
+      --bg:           oklch(14% 0.015 250);
+      --surface:      oklch(18% 0.015 250);
+      --surface-alt:  oklch(20% 0.015 250);
+      --border:       oklch(28% 0.015 250);
+      --text-primary: oklch(94% 0.005 250);
+      --text-secondary: oklch(68% 0.010 250);
+      --brand:        oklch(60% 0.155 250);
+      --brand-hover:  oklch(65% 0.155 250);
+      --brand-muted:  oklch(22% 0.015 250);
+      --nav-bg:       oklch(14% 0.012 250 / 0.92);
+      --shadow-sm:    0 1px 3px oklch(0% 0 0 / 0.3);
+      --shadow-md:    0 4px 12px oklch(0% 0 0 / 0.4);
+      --shadow-lg:    0 16px 40px oklch(0% 0 0 / 0.5);
     }
 
-    /* CSS Phone Frame for original screenshots */
-    .phone-frame {
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-family: 'Nunito Sans', system-ui, sans-serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out);
+    }
+
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── Scroll Reveal ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      body { transition: none; }
+      .navbar, .btn, .navbar__link, .theme-toggle, .feature-card, .pricing-card, .tech__pill, .store-btn {
+        transition: none;
+      }
+    }
+
+    /* ─── Layout ─── */
+    .container {
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-inline: clamp(1rem, 4vw, 2rem);
+    }
+    .section {
+      padding-block: clamp(3.5rem, 8vw, 6.5rem);
+    }
+
+    /* ─── Navbar ─── */
+    .navbar {
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline: 0;
+      z-index: 50;
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--border);
+      height: 4rem;
+      transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out);
+    }
+    .navbar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .navbar__logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .navbar__logo-mark {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.5rem;
+      background: var(--brand);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 0.8125rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+    }
+    .navbar__brand {
+      font-weight: 700;
+      font-size: 1.0625rem;
+      letter-spacing: -0.02em;
+    }
+    .navbar__nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .navbar__link {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: color var(--transition);
       position: relative;
-      border: 10px solid #1f2937;
-      border-radius: 3rem;
-      background: #1f2937;
-      box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.6);
-      overflow: hidden;
-      aspect-ratio: 9 / 19;
-      max-width: 320px;
-      margin: 0 auto;
     }
-    .dark .phone-frame {
-      border-color: #111827;
-      background: #111827;
-    }
-    .phone-frame::before {
+    .navbar__link::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 28px;
-      background: #1f2937;
-      border-bottom-left-radius: 1.25rem;
-      border-bottom-right-radius: 1.25rem;
-      z-index: 20;
+      inset-block-end: -2px;
+      inset-inline-start: 0;
+      height: 1.5px;
+      background: var(--brand);
+      width: 0;
+      transition: width 150ms var(--ease-out);
     }
-    .dark .phone-frame::before {
-      background: #111827;
+    .navbar__link:hover { color: var(--text-primary); }
+    .navbar__link:hover::after { width: 100%; }
+
+    /* ─── Theme Toggle ─── */
+    .theme-toggle {
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background var(--transition), color var(--transition);
     }
-    .phone-frame img {
+    .theme-toggle:hover {
+      background: var(--surface-alt);
+      color: var(--text-primary);
+    }
+    .theme-toggle svg { width: 1.125rem; height: 1.125rem; }
+    .icon-sun { display: none; }
+    .icon-moon { display: block; }
+    .dark .icon-sun { display: block; }
+    .dark .icon-moon { display: none; }
+
+    /* ─── Focus Styles ─── */
+    :focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    :focus:not(:focus-visible) { outline: none; }
+
+    /* ─── Buttons ─── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      padding: 0.75rem 1.75rem;
+      border-radius: var(--radius-btn);
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), box-shadow var(--transition), transform 100ms;
+      text-decoration: none;
+    }
+    .btn--primary {
+      background: var(--brand);
+      color: #fff;
+    }
+    .btn--primary:hover {
+      background: var(--brand-hover);
+      box-shadow: var(--shadow-md);
+    }
+    .btn--primary:active { transform: scale(0.98); }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--text-primary);
+      border-color: var(--border);
+    }
+    .btn--ghost:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      padding-block: 8rem 6rem;
+    }
+    .hero__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--brand-muted);
+      color: var(--brand);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+    .hero__eyebrow-dot {
+      width: 0.375rem;
+      height: 0.375rem;
+      border-radius: 999px;
+      background: var(--brand);
+    }
+    .hero__headline {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+    .hero__headline em {
+      font-style: normal;
+      color: var(--brand);
+    }
+    .hero__subtext {
+      font-size: clamp(1rem, 2vw, 1.1875rem);
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 42ch;
+      margin-bottom: 2.5rem;
+    }
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .hero__image {
+      display: flex;
+      justify-content: center;
+    }
+    .hero__mockup {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-width: 460px;
+      border-radius: 2rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+    }
+
+    /* ─── Section Label ─── */
+    .section-label {
+      display: inline-block;
+      background: var(--brand-muted);
+      color: var(--brand);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    .section-label + h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+    .section-label + h2 + p {
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 50ch;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .section-header p { margin-inline: auto; }
+
+    /* ─── Features Grid ─── */
+    .features {
+      background: var(--surface);
+      border-block: 1px solid var(--border);
+    }
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 1.75rem;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .feature-card:hover {
+      border-color: var(--brand);
+      box-shadow: var(--shadow-sm);
+    }
+    .feature-card__icon {
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 0.75rem;
+      display: grid;
+      place-items: center;
+      margin-bottom: 1.25rem;
+      flex-shrink: 0;
+    }
+    .feature-card__icon svg { width: 1.25rem; height: 1.25rem; }
+    .feature-card__icon--amber {
+      background: oklch(92% 0.040 80);
+      color: oklch(50% 0.110 80);
+    }
+    .feature-card__icon--sky {
+      background: oklch(92% 0.030 220);
+      color: oklch(50% 0.110 220);
+    }
+    .feature-card__icon--indigo {
+      background: oklch(92% 0.050 260);
+      color: oklch(48% 0.130 260);
+    }
+    .feature-card__icon--rose {
+      background: oklch(92% 0.050 350);
+      color: oklch(48% 0.130 350);
+    }
+    .feature-card h3 {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .feature-card p {
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    /* ─── Gallery Preview ─── */
+    .gallery-preview {
+      padding-block: clamp(4rem, 8vw, 7rem);
+    }
+    .gallery-preview__frame {
+      border-radius: 1.5rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+    }
+    .gallery-preview img {
+      width: 100%;
+      height: auto;
+    }
+
+    /* ─── Feature Spotlight ─── */
+    .spotlight {
+      padding-block: clamp(3.5rem, 8vw, 6.5rem);
+    }
+    .spotlight:nth-child(odd) .spotlight__inner { direction: ltr; }
+    .spotlight:nth-child(even) .spotlight__inner { direction: rtl; }
+    .spotlight:nth-child(even) .spotlight__image { direction: ltr; }
+    .spotlight__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      max-width: 1100px;
+      margin-inline: auto;
+      padding-inline: clamp(1rem, 4vw, 2rem);
+    }
+    .spotlight__icon-wrap {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.875rem;
+      display: grid;
+      place-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .spotlight__icon-wrap svg { width: 1.5rem; height: 1.5rem; }
+    .spotlight__icon-wrap--brand {
+      background: var(--brand-muted);
+      color: var(--brand);
+    }
+    .spotlight__icon-wrap--amber {
+      background: oklch(92% 0.040 80);
+      color: oklch(50% 0.110 80);
+    }
+    .spotlight__icon-wrap--sky {
+      background: oklch(92% 0.030 220);
+      color: oklch(50% 0.110 220);
+    }
+    .spotlight__icon-wrap--rose {
+      background: oklch(92% 0.050 350);
+      color: oklch(48% 0.130 350);
+    }
+    .spotlight__heading {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+    .spotlight__text {
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      max-width: 46ch;
+    }
+    .spotlight__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .spotlight__list li {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .spotlight__check {
+      width: 1.375rem;
+      height: 1.375rem;
+      border-radius: 999px;
+      background: oklch(92% 0.060 145);
+      color: oklch(48% 0.110 145);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .spotlight__check svg { width: 0.6875rem; height: 0.6875rem; }
+    .spotlight__image-wrap {
+      border-radius: 1.25rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+    }
+    .spotlight__image-wrap img {
+      width: 100%;
+      height: auto;
       display: block;
     }
 
-    html { font-family: 'Inter', sans-serif; }
+    /* ─── Tech Stack ─── */
+    .tech {
+      background: var(--surface);
+      border-block: 1px solid var(--border);
+    }
+    .tech__pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+    }
+    .tech__pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.125rem;
+      border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: border-color var(--transition), color var(--transition);
+      cursor: default;
+    }
+    .tech__pill:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+    .tech__pill svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+
+    /* ─── Pricing ─── */
+    .pricing {
+      background: var(--surface);
+      border-block: 1px solid var(--border);
+    }
+    .pricing__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      max-width: 760px;
+      margin-inline: auto;
+    }
+    .pricing-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2.25rem;
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .pricing-card:hover {
+      border-color: var(--brand);
+      box-shadow: var(--shadow-md);
+    }
+    .pricing-card--featured {
+      border-color: var(--brand);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+    .pricing-card__badge {
+      position: absolute;
+      inset-block-start: -0.75rem;
+      inset-inline: 50%;
+      transform: translateX(-50%);
+      background: var(--brand);
+      color: #fff;
+      font-size: 0.625rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.875rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .pricing-card__name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.375rem;
+      letter-spacing: -0.01em;
+    }
+    .pricing-card__desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    .pricing-card__price {
+      display: flex;
+      align-items: baseline;
+      gap: 0.375rem;
+      margin-bottom: 1.75rem;
+    }
+    .pricing-card__amount {
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .pricing-card__period {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    .pricing-card__features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      flex: 1;
+      margin-bottom: 2rem;
+    }
+    .pricing-card__features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.625rem;
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+    }
+    .pricing-card__features li svg {
+      width: 1.125rem;
+      height: 1.125rem;
+      color: var(--success);
+      flex-shrink: 0;
+      margin-block-start: 0.1rem;
+    }
+    .pricing-card--featured .pricing-card__features li {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .pricing-card .btn { width: 100%; justify-content: center; }
+
+    /* ─── Download CTA ─── */
+    .download-cta {
+      padding-block: clamp(4rem, 8vw, 7rem);
+    }
+    .download-cta__card {
+      background: var(--brand);
+      border-radius: 1.5rem;
+      padding: clamp(2.5rem, 6vw, 4.5rem);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Noise texture overlay */
+    .download-cta__card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.06;
+      pointer-events: none;
+    }
+    .download-cta__heading {
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 0.875rem;
+      position: relative;
+    }
+    .download-cta__subtext {
+      font-size: 1.0625rem;
+      color: oklch(100% 0 0 / 0.75);
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+    .download-cta__stores {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.875rem;
+      position: relative;
+    }
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.375rem;
+      background: oklch(0% 0 0 / 0.25);
+      border: 1px solid oklch(100% 0 0 / 0.2);
+      border-radius: 1rem;
+      color: #fff;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .store-btn:hover {
+      background: oklch(0% 0 0 / 0.4);
+      border-color: oklch(100% 0 0 / 0.4);
+    }
+    .store-btn svg { width: 1.625rem; height: 1.625rem; flex-shrink: 0; }
+    .store-btn__label { text-align: left; }
+    .store-btn__label small {
+      display: block;
+      font-size: 0.625rem;
+      font-weight: 500;
+      opacity: 0.75;
+      letter-spacing: 0.02em;
+    }
+    .store-btn__label strong { display: block; font-size: 0.9375rem; }
+
+    /* ─── Pill Badges ─── */
+    .pill {
+      display: inline-block;
+      padding: 0.375rem 0.875rem;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 0.625rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+    }
+    .pills {
+      display: flex;
+      gap: 0.625rem;
+      flex-wrap: wrap;
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding-block: 2.5rem;
+    }
+    .footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer__brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .footer__logo-mark {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 0.375rem;
+      background: var(--brand);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 0.625rem;
+      font-weight: 800;
+    }
+    .footer__copy {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      .hero__inner { grid-template-columns: 1fr; gap: 3rem; }
+      .hero__image { order: -1; }
+      .hero__mockup { max-width: 360px; }
+      .hero__subtext { max-width: none; }
+      .hero__actions { justify-content: center; }
+      .features__grid { grid-template-columns: repeat(2, 1fr); }
+      .spotlight__inner { grid-template-columns: 1fr; gap: 2.5rem; direction: ltr !important; }
+      .spotlight:nth-child(even) .spotlight__image { direction: ltr; }
+      .spotlight__text { max-width: none; }
+      .spotlight__list li { justify-content: flex-start; }
+    }
+    @media (max-width: 640px) {
+      .navbar__nav { display: none; }
+      .navbar__nav--open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        inset: 4rem 0 0 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        padding: 1.5rem 1.5rem 2rem;
+        gap: 0.25rem;
+        z-index: 49;
+        animation: slideDown 200ms var(--ease-out) both;
+      }
+      .navbar__nav--open .navbar__link {
+        font-size: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-primary);
+      }
+      .navbar__nav--open .navbar__link:last-child { border-bottom: none; }
+      .navbar__nav--open .navbar__link::after { display: none; }
+      .navbar__menu-btn { display: grid; }
+      .navbar__menu-close {
+        display: grid;
+        position: absolute;
+        inset-block-start: 1rem;
+        inset-inline-end: 1rem;
+      }
+      .features__grid { grid-template-columns: 1fr; }
+      .pricing__grid { grid-template-columns: 1fr; }
+      .hero { padding-block: 7rem 4rem; }
+      .hero__headline { text-align: center; }
+      .hero__subtext { text-align: center; }
+      .footer__inner { justify-content: center; text-align: center; }
+    }
+    @media (min-width: 641px) {
+      .navbar__menu-btn { display: none; }
+      .navbar__menu-close { display: none; }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 
-<body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased transition-colors duration-300">
+<body>
 
-  <!-- ────────────────── NAVBAR ────────────────── -->
-  <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-
-      <!-- Logo -->
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-xl animated-gradient flex items-center justify-center text-white font-bold text-sm shadow-lg">Z</div>
-        <span class="font-bold text-lg tracking-tight">Zipica</span>
-      </div>
-
-      <!-- Nav links (desktop) -->
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600 dark:text-gray-400">
-        <a href="#features" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Features</a>
-        <a href="#gallery"  class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Gallery</a>
-        <a href="#tech"     class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Tech Stack</a>
-        <a href="#download" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Download</a>
-        <a href="terms-of-service.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Terms of Service</a>
-      </nav>
-
-      <!-- Right actions -->
-      <div class="flex items-center gap-3">
-        <!-- Dark mode toggle -->
-        <button id="themeToggle" aria-label="Toggle dark mode"
-          class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-          <!-- Sun icon -->
-          <svg id="iconSun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1m15.07-6.07-.71.71M6.34 17.66l-.71.71M17.66 17.66l-.71-.71M6.34 6.34l-.71-.71M12 8a4 4 0 100 8 4 4 0 000-8z"/>
-          </svg>
-          <!-- Moon icon -->
-          <svg id="iconMoon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>
+  <!-- ─── Navbar ─── -->
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="#" class="navbar__logo">
+        <div class="navbar__logo-mark">Z</div>
+        <span class="navbar__brand">Zipica</span>
+      </a>
+      <nav class="navbar__nav" id="mobileNav" aria-label="Primary">
+        <!-- Close button for mobile nav -->
+        <button class="navbar__menu-close theme-toggle" id="menuClose" aria-label="Close menu">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
-      </div>
+        <a href="#features" class="navbar__link">Features</a>
+        <a href="#gallery" class="navbar__link">Gallery</a>
+        <a href="#tech" class="navbar__link">Tech Stack</a>
+        <a href="#pricing" class="navbar__link">Pricing</a>
+        <a href="terms-of-service.html" class="navbar__link">Terms</a>
+      </nav>
+      <!-- Mobile menu button -->
+      <button class="navbar__menu-btn theme-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg class="icon-moon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="icon-sun" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1m15.07-6.07-.71.71M6.34 17.66l-.71.71M17.66 17.66l-.71-.71M6.34 6.34l-.71-.71M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+        </svg>
+      </button>
     </div>
   </header>
 
-  <!-- ────────────────── HERO ────────────────── -->
-  <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+  <main>
 
-    <!-- Background blobs -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-brand-300/30 dark:bg-brand-700/20 blur-3xl"></div>
-      <div class="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-brand-300/30 dark:bg-brand-900/20 blur-3xl"></div>
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-purple-200/20 dark:bg-purple-900/10 blur-3xl"></div>
-    </div>
-
-    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex flex-col lg:flex-row items-center gap-16">
-
-      <!-- Left: text -->
-      <div class="flex-1 text-center lg:text-left">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 text-xs font-semibold uppercase tracking-widest mb-6">
-          <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
-          iOS · Android
-        </div>
-
-        <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-6">
-          Your photos,<br/>
-          <span class="bg-gradient-to-r from-brand-500 to-indigo-500 bg-clip-text text-transparent">blazingly</span><br/>
-          organised.
-        </h1>
-
-        <p class="text-gray-500 dark:text-gray-400 text-lg sm:text-xl max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed">
-          Zipica is your ultimate photo toolkit to reclaim storage. Effortlessly clean duplicates, compress large media, merge collections, and protect your private photos in a secure vault.
-        </p>
-
-        <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
-          <a href="#download"
-            class="animated-gradient text-white font-semibold px-8 py-3.5 rounded-full shadow-xl hover:shadow-brand-400/40 hover:scale-105 transition-all duration-200 text-sm">
-            Download Free
-          </a>
-        </div>
-
-        <!-- Stats row -->
-        <div class="flex flex-wrap gap-8 justify-center lg:justify-start mt-12 text-center">
-          <div class="w-px bg-gray-200 dark:bg-gray-800 hidden sm:block"></div>
-          <div>
-            <div class="text-xs text-gray-500 dark:text-gray-500 mt-0.5 uppercase tracking-wide">Smooth Scrolling</div>
+    <!-- ─── Hero ─── -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero__inner">
+          <div class="hero__content">
+            <div class="hero__eyebrow reveal">
+              <span class="hero__eyebrow-dot"></span>
+              iOS · Android
+            </div>
+            <h1 class="hero__headline reveal" style="--i:1">
+              Your photos,<br/><em>blazingly</em> organised.
+            </h1>
+            <p class="hero__subtext reveal" style="--i:2">
+              Zipica is your ultimate photo toolkit to reclaim storage. Effortlessly clean duplicates, compress large media, merge collections, and protect your private photos in a secure vault.
+            </p>
+            <div class="hero__actions reveal" style="--i:3">
+              <a href="#pricing" class="btn btn--primary">Download Free</a>
+              <a href="#features" class="btn btn--ghost">See features</a>
+            </div>
           </div>
-          <div class="w-px bg-gray-200 dark:bg-gray-800 hidden sm:block"></div>
-          <div>
-            <div class="text-xs text-gray-500 dark:text-gray-500 mt-0.5 uppercase tracking-wide">Responsive Columns</div>
+          <div class="hero__image reveal" style="--i:2">
+            <img
+              src="public/screenshots/hero_mockup.png"
+              alt="Zipica app on phone"
+              class="hero__mockup"
+              width="460"
+              height="auto"
+              loading="eager"
+            />
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Right: phone mockup -->
-      <div class="flex-1 flex justify-center lg:justify-end">
-        <div class="float relative w-full max-w-lg">
-          <img src="public/screenshots/hero_mockup.png" alt="Zipica Pro Premium Mockup" class="w-full h-auto rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)]">
-          <!-- Glow behind phone -->
-          <div class="absolute inset-0 -z-10 blur-[80px] bg-brand-500/30 dark:bg-brand-600/20 rounded-full scale-90"></div>
+    <!-- ─── Features ─── -->
+    <section id="features" class="section features">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Features</span>
+          <h2>Everything you need,<br/>nothing you don't.</h2>
+          <p>Built for performance from the ground up — with smart caching, multi-threaded processing, and native hardware APIs.</p>
+        </div>
+
+        <div class="features__grid">
+
+          <div class="feature-card reveal" style="--i:0">
+            <div class="feature-card__icon feature-card__icon--amber">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>
+            <h3>Secure Vault</h3>
+            <p>Move sensitive photos into a hidden, encrypted vault. Keep your private memories safe from prying eyes.</p>
+          </div>
+
+          <div class="feature-card reveal" style="--i:1">
+            <div class="feature-card__icon feature-card__icon--sky">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3>Video Compression</h3>
+            <p>Hardware-accelerated H.264 / H.265 / VP9 compression with quality presets and FFmpeg.wasm fallback.</p>
+          </div>
+
+          <div class="feature-card reveal" style="--i:2">
+            <div class="feature-card__icon feature-card__icon--amber">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            </div>
+            <h3>Duplicate Detection</h3>
+            <p>Quickly find and remove near-identical photos to reclaim storage space without losing memories.</p>
+          </div>
+
+          <div class="feature-card reveal" style="--i:3">
+            <div class="feature-card__icon feature-card__icon--sky">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <h3>Batch Operations</h3>
+            <p>Compress or merge multiple photos at once. Sequential processing prevents memory exhaustion.</p>
+          </div>
+
+          <div class="feature-card reveal" style="--i:4">
+            <div class="feature-card__icon feature-card__icon--indigo">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            </div>
+            <h3>Zip Archiving</h3>
+            <p>Select multiple photos and compress them into a single Zip file for easier sharing and storage.</p>
+          </div>
+
+          <div class="feature-card reveal" style="--i:5">
+            <div class="feature-card__icon feature-card__icon--rose">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"/></svg>
+            </div>
+            <h3>Image Merging</h3>
+            <p>Combine multiple images into a single professional-looking layout with smart grids and templates.</p>
+          </div>
+
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ────────────────── FEATURES ────────────────── -->
-  <section id="features" class="py-24 bg-gray-50 dark:bg-gray-900/50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="text-center mb-16 reveal">
-        <div class="inline-block px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 text-xs font-semibold uppercase tracking-widest mb-4">
-          Features
+    <!-- ─── Gallery Preview ─── -->
+    <section id="gallery" class="gallery-preview">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">App Preview</span>
+          <h2>A gallery that keeps<br/>up with you.</h2>
+          <p>Responsive 3–5 column grid adapts to your screen. Calendar view, collections, and albums always one tap away.</p>
         </div>
-        <h2 class="text-4xl sm:text-5xl font-black mb-4">Everything you need,<br/>nothing you don't.</h2>
-        <p class="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">Built for performance from the ground up — with smart caching, multi-threaded processing, and native hardware APIs.</p>
+        <div class="gallery-preview__frame reveal">
+          <img src="public/screenshots/gallery_mockup.png" alt="Zipica gallery view" loading="lazy" />
+        </div>
       </div>
+    </section>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- ─── Feature Spotlights ─── -->
+    <section>
 
-        <!-- Feature card component (repeated) -->
-        <!-- 1: Secure Vault -->
-        <div class="reveal glass rounded-2xl p-6 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200">
-          <div class="w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-900/60 flex items-center justify-center mb-4 text-amber-600 dark:text-amber-300">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      <!-- Cleanup -->
+      <div class="spotlight">
+        <div class="spotlight__inner">
+          <div class="spotlight__content">
+            <div class="spotlight__icon-wrap spotlight__icon-wrap--brand reveal">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </div>
+            <h2 class="spotlight__heading reveal">Reclaim gigabytes in seconds.</h2>
+            <p class="spotlight__text reveal">
+              Our smart duplicate detection identifies near-identical photos, blurry shots, and massive videos that are eating your storage. Save up to 80% space without losing a single memory.
+            </p>
+            <ul class="spotlight__list reveal">
+              <li><span class="spotlight__check"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Identifies similar photo bursts</li>
+              <li><span class="spotlight__check"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Bulk delete with one tap</li>
+            </ul>
           </div>
-          <h3 class="font-bold text-lg mb-2">Secure Vault</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Move sensitive photos into a hidden, encrypted vault. Keep your private memories safe from prying eyes.</p>
-        </div>
-
-        <!-- 2: Video Compression -->
-        <div class="reveal glass rounded-2xl p-6 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200">
-          <div class="w-11 h-11 rounded-xl bg-sky-100 dark:bg-sky-900/60 flex items-center justify-center mb-4 text-sky-600 dark:text-sky-300">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <h3 class="font-bold text-lg mb-2">Video Compression</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Hardware-accelerated H.264 / H.265 / VP9 compression with quality presets and FFmpeg.wasm fallback.</p>
-        </div>
-
-        <!-- 3: Duplicate Detection -->
-        <div class="reveal glass rounded-2xl p-6 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200">
-          <div class="w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center mb-4 text-amber-600 dark:text-amber-300">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-          </div>
-          <h3 class="font-bold text-lg mb-2">Duplicate Detection</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Quickly find and remove near-identical photos to reclaim storage space without losing memories.</p>
-        </div>
-
-        <!-- 4: Batch Operations -->
-        <div class="reveal glass rounded-2xl p-6 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200">
-          <div class="w-11 h-11 rounded-xl bg-sky-100 dark:bg-sky-900/60 flex items-center justify-center mb-4 text-sky-600 dark:text-sky-300">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          </div>
-          <h3 class="font-bold text-lg mb-2">Batch Operations</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Compress or merge multiple photos at once. Sequential processing prevents memory exhaustion.</p>
-        </div>
-
-        <!-- 5: Zip Archiving -->
-        <div class="reveal glass rounded-2xl p-6 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200">
-          <div class="w-11 h-11 rounded-xl bg-indigo-100 dark:bg-indigo-900/60 flex items-center justify-center mb-4 text-indigo-600 dark:text-indigo-300">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-          </div>
-          <h3 class="font-bold text-lg mb-2">Zip Archiving</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Select multiple photos and compress them into a single Zip file for easier sharing and storage.</p>
-        </div>
-
-        <!-- 6: Image Merging -->
-        <div class="reveal glass rounded-2xl p-6 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200">
-          <div class="w-11 h-11 rounded-xl bg-rose-100 dark:bg-rose-900/60 flex items-center justify-center mb-4 text-rose-600 dark:text-rose-300">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"/></svg>
-          </div>
-          <h3 class="font-bold text-lg mb-2">Image Merging</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Combine multiple images into a single professional-looking layout with smart grids and templates.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ────────────────── GALLERY PREVIEW ────────────────── -->
-  <section id="gallery" class="py-24">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="text-center mb-16 reveal">
-        <div class="inline-block px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 text-xs font-semibold uppercase tracking-widest mb-4">
-          App Preview
-        </div>
-        <h2 class="text-4xl sm:text-5xl font-black mb-4">A gallery that keeps up with you.</h2>
-        <p class="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">Responsive 3–5 column grid adapts to your screen. Calendar view, collections, and albums always one tap away.</p>
-      </div>
-
-      <!-- Real gallery preview -->
-      <div class="reveal relative max-w-5xl mx-auto">
-        <div class="rounded-3xl overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800">
-          <img src="public/screenshots/gallery_mockup.png" alt="Zipica Gallery View Premium" class="w-full h-auto">
-        </div>
-        <!-- Decorative glow -->
-        <div class="absolute -inset-10 -z-10 blur-3xl bg-brand-500/10 rounded-[3rem]"></div>
-      </div>
-    </div>
-  </section>
-  <section>
-     <!-- Feature: Cleanup -->
-      <div class="mt-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 p-6 flex flex-col lg:flex-row items-center gap-16 reveal">
-        <div class="flex-1">
-          <div class="w-12 h-12 rounded-2xl bg-brand-100 dark:bg-brand-900/40 flex items-center justify-center mb-6 text-brand-600 dark:text-brand-300 shadow-lg">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-          </div>
-          <h3 class="text-3xl font-black mb-4">Reclaim gigabytes in seconds.</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-lg leading-relaxed mb-6">
-            Our smart duplicate detection identifies near-identical photos, blurry shots, and massive videos that are eating your storage. Save up to 80% space without losing a single memory.
-          </p>
-          <ul class="space-y-3">
-            <li class="flex items-center gap-3 text-sm font-medium">
-              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">✓</span>
-              <span>Identifies similar photo bursts</span>
-            </li>
-            <li class="flex items-center gap-3 text-sm font-medium">
-              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">✓</span>
-              <span>Bulk delete with one tap</span>
-            </li>
-          </ul>
-        </div>
-        <div class="flex-1">
-          <div class="relative group">
-            <div class="absolute -inset-4 bg-gradient-to-r from-brand-500 to-indigo-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
-            <div class="relative rounded-[2rem] overflow-hidden border border-gray-100 dark:border-gray-800 shadow-2xl">
-              <img src="public/screenshots/duplicates_mockup.png" alt="Duplicate Detection Premium Mockup" class="w-full h-auto">
+          <div class="spotlight__image reveal">
+            <div class="spotlight__image-wrap">
+              <img src="public/screenshots/duplicates_mockup.png" alt="Duplicate detection feature" loading="lazy" />
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Feature: Vault -->
-      <div class="mt-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row-reverse items-center gap-16 reveal">
-        <div class="flex-1 text-right lg:text-left">
-          <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center mb-6 text-amber-600 dark:text-amber-300 shadow-lg ml-auto lg:ml-0">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      <!-- Vault -->
+      <div class="spotlight">
+        <div class="spotlight__inner">
+          <div class="spotlight__content">
+            <div class="spotlight__icon-wrap spotlight__icon-wrap--amber reveal">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>
+            <h2 class="spotlight__heading reveal">Your privacy, strictly enforced.</h2>
+            <p class="spotlight__text reveal">
+              Military-grade AES-256 encryption protects your most sensitive folders. The keys never leave your device, ensuring total privacy.
+            </p>
+            <div class="pills reveal">
+              <span class="pill">AES-256-GCM</span>
+              <span class="pill">PBKDF2</span>
+            </div>
           </div>
-          <h3 class="text-3xl font-black mb-4">Your privacy, strictly enforced.</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-lg leading-relaxed mb-6">
-            Military-grade AES-256 encryption protects your most sensitive folders. The keys never leave your device, ensuring total privacy.
-          </p>
-          <div class="flex gap-4 justify-end lg:justify-start">
-            <div class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-xs font-bold uppercase tracking-wider">AES-256-GCM</div>
-            <div class="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-xs font-bold uppercase tracking-wider">PBKDF2</div>
-          </div>
-        </div>
-        <div class="flex-1">
-          <div class="relative group">
-            <div class="absolute -inset-4 bg-gradient-to-r from-amber-500 to-orange-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
-            <div class="relative rounded-[2rem] overflow-hidden border border-gray-100 dark:border-gray-800 shadow-2xl">
-              <img src="public/screenshots/vault_mockup.png" alt="Secure Vault Premium Mockup" class="w-full h-auto">
+          <div class="spotlight__image reveal">
+            <div class="spotlight__image-wrap">
+              <img src="public/screenshots/vault_mockup.png" alt="Secure vault feature" loading="lazy" />
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Feature: Compress Video -->
-      <div class="mt-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-16 reveal">
-        <div class="flex-1">
-          <div class="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-900/40 flex items-center justify-center mb-6 text-sky-600 dark:text-sky-300 shadow-lg">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <!-- Video Compression -->
+      <div class="spotlight">
+        <div class="spotlight__inner">
+          <div class="spotlight__content">
+            <div class="spotlight__icon-wrap spotlight__icon-wrap--sky reveal">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h2 class="spotlight__heading reveal">Shrink videos,<br/>keep the quality.</h2>
+            <p class="spotlight__text reveal">
+              Massive 4K videos eating your storage? Compress them by up to 90% with hardware-accelerated H.264/HEVC. Choose your format and quality presets for the perfect balance.
+            </p>
+            <ul class="spotlight__list reveal">
+              <li><span class="spotlight__check"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Up to 90% size reduction</li>
+              <li><span class="spotlight__check"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Fast hardware-accelerated encoding</li>
+              <li><span class="spotlight__check"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Custom bitrate and quality presets</li>
+            </ul>
           </div>
-          <h3 class="text-3xl font-black mb-4">Shrink videos,<br/>keep the quality.</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-lg leading-relaxed mb-6">
-            Massive 4K videos eating your storage? Compress them by up to 90% with hardware-accelerated H.264/HEVC. Choose your format and quality presets for the perfect balance.
-          </p>
-          <ul class="space-y-3">
-            <li class="flex items-center gap-3 text-sm font-medium">
-              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">✓</span>
-              <span>Up to 90% size reduction</span>
-            </li>
-            <li class="flex items-center gap-3 text-sm font-medium">
-              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">✓</span>
-              <span>Fast hardware-accelerated encoding</span>
-            </li>
-            <li class="flex items-center gap-3 text-sm font-medium">
-              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">✓</span>
-              <span>Custom bitrate & quality presets</span>
-            </li>
-          </ul>
-        </div>
-        <div class="flex-1 flex justify-center">
-          <div class="relative group">
-            <div class="absolute -inset-6 bg-gradient-to-r from-sky-500 to-blue-500 rounded-[3.5rem] blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
-            <div class="phone-frame">
-              <img src="public/screenshots/compress_video.jpg" alt="Compress Video Feature Screenshot">
+          <div class="spotlight__image reveal">
+            <div class="spotlight__image-wrap">
+              <img src="public/screenshots/compress_video.jpg" alt="Video compression feature" loading="lazy" />
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Feature: Merge Images -->
-      <div class="mt-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row-reverse items-center gap-16 reveal">
-        <div class="flex-1 text-right lg:text-left">
-          <div class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center mb-6 text-rose-600 dark:text-rose-300 shadow-lg ml-auto lg:ml-0">
-             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"/></svg>
+      <!-- Merge Images -->
+      <div class="spotlight">
+        <div class="spotlight__inner">
+          <div class="spotlight__content">
+            <div class="spotlight__icon-wrap spotlight__icon-wrap--rose reveal">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"/></svg>
+            </div>
+            <h2 class="spotlight__heading reveal">Combine memories<br/>into a single view.</h2>
+            <p class="spotlight__text reveal">
+              Create beautiful panoramas or grids from your collections. Merge dozens of screenshots into a single high-resolution image in seconds. Perfect for sharing and archiving.
+            </p>
+            <ul class="spotlight__list reveal">
+              <li><span class="spotlight__check"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Smart grid and auto-layout engine</li>
+              <li><span class="spotlight__check"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>Support for up to 50+ images at once</li>
+              <li><span class="spotlight__check"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>High-resolution WebP and AVIF output</li>
+            </ul>
           </div>
-          <h3 class="text-3xl font-black mb-4">Combine memories<br/>into a single view.</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-lg leading-relaxed mb-6">
-            Create beautiful panoramas or grids from your collections. Merge dozens of screenshots into a single high-resolution image in seconds. Perfect for sharing and archiving.
-          </p>
-          <ul class="space-y-3">
-            <li class="flex items-center gap-3 text-sm font-medium justify-end lg:justify-start">
-              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">✓</span>
-              <span>Smart grid & auto-layout engine</span>
-            </li>
-            <li class="flex items-center gap-3 text-sm font-medium justify-end lg:justify-start">
-              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">✓</span>
-              <span>Support for up to 50+ images at once</span>
-            </li>
-            <li class="flex items-center gap-3 text-sm font-medium justify-end lg:justify-start">
-              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">✓</span>
-              <span>High-resolution WebP & AVIF output</span>
-            </li>
-          </ul>
-        </div>
-        <div class="flex-1 flex justify-center">
-          <div class="relative group">
-            <div class="absolute -inset-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-[3.5rem] blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
-            <div class="phone-frame">
-              <img src="public/screenshots/merge_images.jpg" alt="Merge Images Feature Screenshot">
+          <div class="spotlight__image reveal">
+            <div class="spotlight__image-wrap">
+              <img src="public/screenshots/merge_images.jpg" alt="Image merging feature" loading="lazy" />
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ────────────────── TECH STACK ────────────────── -->
-  <section id="tech" class="py-24 bg-gray-50 dark:bg-gray-900/50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    </section>
 
-      <div class="text-center mb-16 reveal">
-        <div class="inline-block px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 text-xs font-semibold uppercase tracking-widest mb-4">
-          Tech Stack
+    <!-- ─── Tech Stack ─── -->
+    <section id="tech" class="section tech">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Tech Stack</span>
+          <h2>Built with the best tools.</h2>
+          <p>Open-source, type-safe, and optimised for mobile and web from day one.</p>
         </div>
-        <h2 class="text-4xl sm:text-5xl font-black mb-4">Built with the best tools.</h2>
-        <p class="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">Open-source, type-safe, and optimised for mobile and web from day one.</p>
-      </div>
-
-      <div class="reveal flex flex-wrap justify-center gap-4">
-        <!-- Tech pill -->
-        <span class="px-5 py-2.5 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm font-semibold shadow-sm hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors cursor-default">🔷 TypeScript</span>
-        <span class="px-5 py-2.5 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm font-semibold shadow-sm hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors cursor-default">⚡ Vite</span>
-        <span class="px-5 py-2.5 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm font-semibold shadow-sm hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors cursor-default">🎨 TailwindCSS</span>
-        <span class="px-5 py-2.5 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm font-semibold shadow-sm hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors cursor-default">📱 Capacitor</span>
-        <span class="px-5 py-2.5 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm font-semibold shadow-sm hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors cursor-default">🎬 FFmpeg.wasm</span>
-        <span class="px-5 py-2.5 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm font-semibold shadow-sm hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors cursor-default">✨ Framer Motion</span>
-        <span class="px-5 py-2.5 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm font-semibold shadow-sm hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors cursor-default">🖼️ Lucide Icons</span>
-        <span class="px-5 py-2.5 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm font-semibold shadow-sm hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors cursor-default">🗄️ IndexedDB</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ────────────────── PRICING ────────────────── -->
-  <section id="pricing" class="py-24 bg-gray-50 dark:bg-gray-900/50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="text-center mb-16 reveal">
-        <div class="inline-block px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 text-xs font-semibold uppercase tracking-widest mb-4">
-          Pricing
+        <div class="tech__pills">
+          <!-- TypeScript -->
+          <span class="tech__pill reveal">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.45 2.45 0 0 0-.623.242c-.17.104-.3.229-.393.374s-.145.297-.145.459c0 .351.179.648.536.893.356.245.846.368 1.468.368.524 0 .994-.096 1.409-.288.415-.192.774-.47 1.075-.835l1.23 1.711a4.986 4.986 0 0 1-1.388.945 5.986 5.986 0 0 1-1.499.523 7.07 7.07 0 0 1-1.536.161 5.77 5.77 0 0 1-1.726-.23 3.755 3.755 0 0 1-1.345-.717 3.367 3.367 0 0 1-.876-1.163 3.32 3.32 0 0 1-.307-1.27c0-.556.093-1.06.278-1.512.186-.452.445-.847.777-1.181.333-.335.72-.596 1.162-.783.442-.187.912-.28 1.409-.28z"/></svg>
+            TypeScript
+          </span>
+          <!-- Vite -->
+          <span class="tech__pill reveal">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L1.608 6.439v11.122L12 24l10.392-6.439V6.439zm0 2.356l8.696 5.139v10.01L12 22.644 3.304 17.505v-10.01zm7.13 5.866l-5.174 3.205-5.826-3.44 5.826-3.44z"/></svg>
+            Vite
+          </span>
+          <!-- Tailwind CSS -->
+          <span class="tech__pill reveal">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z"/></svg>
+            Tailwind CSS
+          </span>
+          <!-- Capacitor -->
+          <span class="tech__pill reveal">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+            Capacitor
+          </span>
+          <!-- FFmpeg -->
+          <span class="tech__pill reveal">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.002 2c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-1-6h2v2h-2zm1.549-6.451l-.899.9 2.401 2.401.9-.9-.9-.9z"/></svg>
+            FFmpeg.wasm
+          </span>
+          <!-- Framer Motion -->
+          <span class="tech__pill reveal">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 2.625a2.625 2.625 0 0 1 3.75 3.75v11.25a2.625 2.625 0 0 1-5.25 0V6.375a2.625 2.625 0 0 1 1.5-3.75zM7.5 2.625a2.625 2.625 0 0 0-3.75 3.75v11.25a2.625 2.625 0 0 0 5.25 0V6.375A2.625 2.625 0 0 0 7.5 2.625zM12 2.625a2.625 2.625 0 0 1 3.75 3.75v11.25a2.625 2.625 0 0 1-5.25 0V6.375A2.625 2.625 0 0 1 12 2.625z"/></svg>
+            Framer Motion
+          </span>
+          <!-- Lucide -->
+          <span class="tech__pill reveal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Lucide Icons
+          </span>
+          <!-- IndexedDB -->
+          <span class="tech__pill reveal">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            IndexedDB
+          </span>
         </div>
-        <h2 class="text-4xl sm:text-5xl font-black mb-4">Simple, transparent pricing.</h2>
-        <p class="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">No subscriptions. Pay once, own it forever.</p>
       </div>
+    </section>
 
-      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-
-        <!-- Lite Plan -->
-        <div class="reveal glass rounded-3xl p-8 bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-800 flex flex-col h-full hover:shadow-xl transition-all duration-300">
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-2">Lite</h3>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Blazingly small, under 3MB install size.</p>
-          </div>
-          <div class="mb-8">
-            <span class="text-4xl font-black">$0</span>
-            <span class="text-gray-400 text-sm ml-1">Free Forever</span>
-          </div>
-          <ul class="space-y-4 mb-10 text-sm flex-grow">
-            <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-              <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Gallery: Screenshot & Duplicate detection</span>
-            </li>
-            <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-              <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Compress: Images (JPEG only)</span>
-            </li>
-            <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-              <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Archived: Max 10 files per zip</span>
-            </li>
-            <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-              <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Vault: Included for free</span>
-            </li>
-            <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-              <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Merge: Up to 16 images</span>
-            </li>
-          </ul>
-          <a href="#download" class="block text-center py-3 px-6 rounded-2xl border border-gray-200 dark:border-gray-800 font-semibold text-gray-700 dark:text-gray-300 hover:border-brand-400 transition-all">Start Free</a>
+    <!-- ─── Pricing ─── -->
+    <section id="pricing" class="section pricing">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Pricing</span>
+          <h2>Simple, transparent pricing.</h2>
+          <p>No subscriptions. Pay once, own it forever.</p>
         </div>
 
-        <!-- Pro Plan -->
-        <div class="reveal relative glass rounded-3xl p-8 bg-white dark:bg-gray-950 border-2 border-brand-500 shadow-2xl shadow-brand-500/10 flex flex-col h-full transform scale-105 z-10">
-          <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full animated-gradient text-white text-[10px] font-bold uppercase tracking-widest shadow-lg">Most Popular</div>
-          <div class="mb-8">
-            <h3 class="text-xl font-bold mb-2">Pro</h3>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">The ultimate toolkit for your library.</p>
+        <div class="pricing__grid">
+
+          <!-- Lite -->
+          <div class="pricing-card reveal">
+            <div class="pricing-card__name">Lite</div>
+            <div class="pricing-card__desc">All the essentials, under 3MB.</div>
+            <div class="pricing-card__price">
+              <span class="pricing-card__amount">$0</span>
+              <span class="pricing-card__period">Free forever</span>
+            </div>
+            <ul class="pricing-card__features">
+              <li>
+                <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Gallery with screenshot and duplicate detection
+              </li>
+              <li>
+                <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Image compression (JPEG)
+              </li>
+              <li>
+                <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Zip archiving (up to 10 files)
+              </li>
+              <li>
+                <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Secure vault included
+              </li>
+              <li>
+                <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Merge up to 16 images
+              </li>
+            </ul>
+            <a href="#download" class="btn btn--ghost">Start Free</a>
           </div>
-          <div class="mb-8">
-            <span class="text-4xl font-black">$3.99</span>
-            <span class="text-gray-400 text-sm ml-1">One-time purchase</span>
+
+          <!-- Pro -->
+          <div class="pricing-card pricing-card--featured reveal">
+            <div class="pricing-card__badge">Most Popular</div>
+            <div class="pricing-card__name">Pro</div>
+            <div class="pricing-card__desc">The ultimate toolkit for your library.</div>
+            <div class="pricing-card__price">
+              <span class="pricing-card__amount">$3.99</span>
+              <span class="pricing-card__period">One-time purchase</span>
+            </div>
+            <ul class="pricing-card__features">
+              <li>
+                <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Everything in Lite
+              </li>
+              <li>
+                <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                All image formats: JPEG, PNG, WebP, AVIF
+              </li>
+              <li>
+                <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Video compression
+              </li>
+              <li>
+                <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Unlimited vault, merge, and zip
+              </li>
+            </ul>
+            <a href="#download" class="btn btn--primary">Go Pro Now</a>
           </div>
-          <ul class="space-y-4 mb-10 text-sm flex-grow">
-            <li class="flex items-center gap-3 text-gray-700 dark:text-gray-200 font-medium">
-              <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Everything in Lite</span>
-            </li>
-            <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-              <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Compress Image: All formats (JPEG, PNG, WebP, AVIF)</span>
-            </li>
-            <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-              <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Video Compression</span>
-            </li>
-             <li class="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-              <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span>Vault, Merge, Archived zip without limit</span>
-            </li>
-          </ul>
-          <a href="#download" class="block text-center py-4 px-6 rounded-2xl animated-gradient text-white font-bold shadow-xl shadow-brand-500/20 hover:scale-[1.02] transition-all">Go Pro Now</a>
+
         </div>
-
       </div>
+    </section>
 
-    </div>
-  </section>
-
-  <!-- ────────────────── DOWNLOAD / CTA ────────────────── -->
-  <section id="download" class="py-24">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div class="reveal relative rounded-3xl overflow-hidden p-12 sm:p-16 animated-gradient text-white shadow-2xl">
-
-        <!-- Noise overlay for texture -->
-        <div class="absolute inset-0 opacity-10" style="background-image:url(data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E)"></div>
-
-        <div class="relative">
-          <h2 class="text-4xl sm:text-5xl font-black mb-4">Get Zipica today.</h2>
-          <p class="text-white/80 text-lg max-w-lg mx-auto mb-10 leading-relaxed">
-            Available on iOS, Android.
-          </p>
-
-          <div class="flex flex-wrap gap-4 justify-center">
-            <!-- App Store placeholder -->
-            <a href="#" class="flex items-center gap-3 px-6 py-3.5 bg-black/30 hover:bg-black/50 border border-white/20 hover:border-white/40 rounded-2xl transition-all text-left">
-              <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-              <div>
-                <div class="text-white/60 text-xs">Download on the</div>
-                <div class="text-white font-semibold text-sm">App Store</div>
-              </div>
+    <!-- ─── Download CTA ─── -->
+    <section id="download" class="section download-cta">
+      <div class="container">
+        <div class="download-cta__card reveal">
+          <h2 class="download-cta__heading">Get Zipica today.</h2>
+          <p class="download-cta__subtext">Available on iOS and Android.</p>
+          <div class="download-cta__stores">
+            <a href="#" class="store-btn" aria-label="Download on the App Store">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+              <span class="store-btn__label">
+                <small>Download on the</small>
+                <strong>App Store</strong>
+              </span>
             </a>
-
-            <!-- Google Play placeholder -->
-            <a href="#" class="flex items-center gap-3 px-6 py-3.5 bg-black/30 hover:bg-black/50 border border-white/20 hover:border-white/40 rounded-2xl transition-all text-left">
-              <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M3.18 23.76a2 2 0 001.98-.22l11.46-6.62-2.62-2.62L3.18 23.76zM.5 1.02C.19 1.37 0 1.89 0 2.56v18.88c0 .67.19 1.19.5 1.54l.09.08 10.57-10.57v-.24L.59.94.5 1.02zM21.8 10.46l-3-1.73-2.93 2.93 2.93 2.93 3-1.73c.86-.5.86-1.9 0-2.4zm-17.64 9.92L15.62 13.8l-2.62-2.62L3.18 23.76c.57.34 1.33.26 1.98-.22v.84z"/></svg>
-              <div>
-                <div class="text-white/60 text-xs">Get it on</div>
-                <div class="text-white font-semibold text-sm">Google Play</div>
-              </div>
+            <a href="#" class="store-btn" aria-label="Get it on Google Play">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76a2 2 0 001.98-.22l11.46-6.62-2.62-2.62L3.18 23.76zM.5 1.02C.19 1.37 0 1.89 0 2.56v18.88c0 .67.19 1.19.5 1.54l.09.08 10.57-10.57v-.24L.59.94.5 1.02zM21.8 10.46l-3-1.73-2.93 2.93 2.93 2.93 3-1.73c.86-.5.86-1.9 0-2.4zm-17.64 9.92L15.62 13.8l-2.62-2.62L3.18 23.76c.57.34 1.33.26 1.98-.22v.84z"/></svg>
+              <span class="store-btn__label">
+                <small>Get it on</small>
+                <strong>Google Play</strong>
+              </span>
             </a>
-
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ────────────────── FOOTER ────────────────── -->
-  <footer class="py-12 border-t border-gray-100 dark:border-gray-800">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500 dark:text-gray-500">
-      <div class="flex items-center gap-2">
-        <div class="w-6 h-6 rounded-lg animated-gradient flex items-center justify-center text-white font-bold text-xs">C</div>
-        <span class="font-semibold text-gray-700 dark:text-gray-300">Zipica</span>
-        <span class="text-gray-400">·</span>
-        <span>Cross-platform photo gallery</span>
+  </main>
+
+  <!-- ─── Footer ─── -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <div class="footer__logo-mark">Z</div>
+        Zipica
       </div>
+      <p class="footer__copy">Cross-platform photo gallery</p>
     </div>
   </footer>
 
-  <!-- ────────────────── SCRIPTS ────────────────── -->
   <script>
-    // Dark mode toggle
+    /* Theme Toggle */
+    const html = document.documentElement;
     const toggle = document.getElementById('themeToggle');
-    const html   = document.documentElement;
 
-    // Initialise from localStorage or system preference
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (
+      localStorage.theme === 'dark' ||
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
       html.classList.add('dark');
     }
 
@@ -639,17 +1266,48 @@
       localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
     });
 
-    // Scroll-reveal
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12 });
+    /* Mobile Menu Toggle */
+    const menuToggle = document.getElementById('menuToggle');
+    const menuClose = document.getElementById('menuClose');
+    const mobileNav = document.getElementById('mobileNav');
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    if (menuToggle && mobileNav) {
+      menuToggle.addEventListener('click', () => {
+        mobileNav.classList.add('navbar__nav--open');
+        menuToggle.setAttribute('aria-expanded', 'true');
+        menuToggle.focus();
+      });
+      menuClose && menuClose.addEventListener('click', () => {
+        mobileNav.classList.remove('navbar__nav--open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.focus();
+      });
+      // Close on link click
+      mobileNav.querySelectorAll('.navbar__link').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileNav.classList.remove('navbar__nav--open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+
+    /* Scroll Reveal — staggered by inline --i */
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const i = parseFloat(getComputedStyle(el).getPropertyValue('--i')) || 0;
+            el.style.transitionDelay = `${i * 60}ms`;
+            el.classList.add('visible');
+            revealObserver.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
   </script>
 
 </body>

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(python3 -m http.server 8765)",
+      "Bash(echo \"Server PID: $!\")",
+      "Bash(rtk curl:*)",
+      "Skill(browse)"
+    ]
+  }
+}

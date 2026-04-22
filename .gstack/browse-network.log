@@ -1,0 +1,3 @@
+[2026-04-22T16:50:44.377Z] GET http://localhost:8765/terms-of-service.html → 200 (3ms, 16193B)
+[2026-04-22T16:50:44.383Z] GET https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800&display=swap → pending (?ms, ?B)
+[2026-04-22T16:50:44.723Z] GET https://fonts.gstatic.com/s/nunitosans/v19/pe0AMImSLYBIv1o4X1M8ce2xCx3yop4tQpF_MeTm0lfUVwoNnq4CLz0_kJ3xzHGGVFM.woff2 → 200 (156ms, 49612B)
